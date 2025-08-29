@@ -1,0 +1,8 @@
+06/08/22 3:25:28 PM: 06/08/22 3:25:28 PM : Error Found in the SendReminderMail(). Exception - Column 'Name' does not belong to table . 
+06/08/22 3:25:48 PM: 06/08/22 3:25:48 PM : Error Found in the SendReminderMail(). Exception - Column 'Name' does not belong to table . 
+06/08/22 3:26:35 PM: 06/08/22 3:26:35 PM : Error Found in the SendReminderMail(). Exception - Column 'Name' does not belong to table . 
+06/08/22 3:27:21 PM: 06/08/22 3:27:21 PM : Error Found in the SendReminderMail(). Exception - Column 'Name' does not belong to table . 
+06/08/22 3:28:33 PM: 06/08/22 3:28:32 PM : Error Found in the SendReminderMail(). Exception - Unable to cast object of type 'System.Int32' to type 'System.String'. 
+06/08/22 3:55:07 PM: 06/08/22 3:55:07 PM : Error Found in the SendReminderMail(). Exception - Unable to cast object of type 'System.DateTime' to type 'System.String'. 
+06/08/22 3:55:37 PM: 06/08/22 3:55:37 PM : Error Found in the SendReminderMail(). Exception - Unable to cast object of type 'System.DateTime' to type 'System.String'. 
+06/08/22 3:57:40 PM: 06/08/22 3:57:40 PM : Error Found in the SendReminderMail(). Exception - Unable to cast object of type 'System.Int32' to type 'System.String'. 

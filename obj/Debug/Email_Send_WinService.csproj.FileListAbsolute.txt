@@ -1,0 +1,75 @@
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe.config
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\bin\Debug\Email_Send_WinService.pdb
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\obj\Debug\Email_Send_WinService.exe
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\obj\Debug\Email_Send_WinService.pdb
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+C:\Ranjit\Running Projects\Final Email Service Code\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe.config
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.pdb
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.AssemblyReference.cache
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.exe
+F:\Projects\icssoft\EmailSendingService\Email_Sending_Service_Latest\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.pdb
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe.config
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.pdb
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.AssemblyReference.cache
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.exe
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_20220106\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.pdb
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe.config
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.pdb
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.AssemblyReference.cache
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.exe
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.pdb
+D:\Rushali\Email_Service_Shital madam\Email_Send_WinService_2022-02-22\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.SuggestedBindingRedirects.cache
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.exe
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.pdb
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe.config
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\bin\Debug\Email_Send_WinService.pdb
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.AssemblyReference.cache
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+D:\Shraddha\Other\Documents\Email_Send_WinService_2022-06-09\Email_Send_WinService_2022-06-09\Email_Send_WinService\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.AssemblyReference.cache
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.SuggestedBindingRedirects.cache
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\obj\Debug\Email_Send_WinService.exe
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\obj\Debug\Email_Send_WinService.pdb
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe.config
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe
+D:\Shraddha\SAFE\safe_old\Email_Send_WinService\bin\Debug\Email_Send_WinService.pdb
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe.config
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\bin\Debug\Email_Send_WinService.exe
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\bin\Debug\Email_Send_WinService.pdb
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.AssemblyReference.cache
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.SuggestedBindingRedirects.cache
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\obj\Debug\Email_Send_WinService.exe
+D:\OFFICE\SAFE EMAIL SERVIC FINAL\Email_Send_WinService\obj\Debug\Email_Send_WinService.pdb
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\bin\Debug\Email_Send_WinService.exe.config
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\bin\Debug\Email_Send_WinService.exe
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\bin\Debug\Email_Send_WinService.pdb
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\obj\Debug\Email_Send_WinService.csproj.AssemblyReference.cache
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\obj\Debug\Email_Send_WinService.exe.config
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\obj\Debug\Email_Send_WinService.ProjectInstaller.resources
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\obj\Debug\Email_Send_WinService.csproj.GenerateResource.cache
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\obj\Debug\Email_Send_WinService.csproj.CoreCompileInputs.cache
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\obj\Debug\Email_Send_WinService.exe
+D:\Shraddha\SAFE\Latest_SAFE_03_21_2025\EmailService\obj\Debug\Email_Send_WinService.pdb
