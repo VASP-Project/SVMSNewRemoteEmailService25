@@ -547,6 +547,11 @@ namespace Email_Send_WinService
         {
             try
             {
+                DateTime now = DateTime.Now;
+                DateTime targetDate = (now.Hour < 3 || (now.Hour == 3 && now.Minute < 10))
+                    ? now.Date.AddDays(-1)
+                    : now.Date;
+
                 DAL_SVMS dal = new DAL_SVMS();
                 DataTable dt = dal.GetCompaniesWithMissedAuditsData("MA");
 
@@ -584,23 +589,23 @@ namespace Email_Send_WinService
                         }
 
                         string callbackUrl = ConfigurationManager.AppSettings["SVMSGUILink"];
-                        var auditDateStr = "";
+                        var auditDateStr = targetDate.ToString("MM/dd/yyyy");
                         // Generate HTML rows for each company
                         StringBuilder rowsBuilder = new StringBuilder();
                         foreach (DataRow item in dt.Rows)
                         {
                             rowsBuilder.Append("<tr>");
                             rowsBuilder.Append($"<td>{item["CompanyName"]}</td>");
-                            auditDateStr = item["AuditDate"] != DBNull.Value
-                                             ? Convert.ToDateTime(item["AuditDate"]).ToString("MM/dd/yyyy")
-                                             : "N/A";
+                            //auditDateStr = item["AuditDate"] != DBNull.Value
+                            //                 ? Convert.ToDateTime(item["AuditDate"]).ToString("MM/dd/yyyy")
+                            //                 : "N/A";
                             //rowsBuilder.Append($"<td>{auditDateStr}</td>");
 
                             rowsBuilder.Append("</tr>");
                         }
 
                         // Insert company rows into table
-                        htmlBody = htmlBody.Replace("#Auditdate", auditDateStr.ToString());
+                        htmlBody = htmlBody.Replace("#Auditdate", auditDateStr);
                         htmlBody = htmlBody.Replace("#CompanyName", rowsBuilder.ToString());
                         htmlBody = htmlBody.Replace("hrefCode", callbackUrl);
 
