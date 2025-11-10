@@ -548,9 +548,15 @@ namespace Email_Send_WinService
             try
             {
                 DateTime now = DateTime.Now;
-                DateTime targetDate = (now.Hour < 3 || (now.Hour == 3 && now.Minute < 10))
-                    ? now.Date.AddDays(-1)
-                    : now.Date;
+                if (now.Hour < 3 || (now.Hour == 3 && now.Minute < 10))
+                {
+                    LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 3:10 AM.");
+                    return;
+                }
+
+                // Target previous day’s audit
+                DateTime targetDate = now.Date.AddDays(-1);
+
 
                 DAL_SVMS dal = new DAL_SVMS();
                 DataTable dt = dal.GetCompaniesWithMissedAuditsData("MA");
