@@ -548,7 +548,7 @@ namespace Email_Send_WinService
             try
             {
                 DateTime now = DateTime.Now;
-                if (now.Hour < 4 || (now.Hour == 4 && now.Minute < 10))
+                if (now.Hour < 5 || (now.Hour == 5 && now.Minute < 10))
                 {
                     LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 3:10 AM.");
                     return;
@@ -634,10 +634,11 @@ namespace Email_Send_WinService
                         foreach (DataRow item in dt.Rows)
                         {
                             int companyId = Convert.ToInt32(item["CompanyId"]);
+                            int locationId = Convert.ToInt32(item["LocationId"]);
                             if (item["AuditDate"] != DBNull.Value)
                             {
                                 DateTime auditDate = Convert.ToDateTime(item["AuditDate"]);
-                                dal.UpdateMisingAuditMailSentStatus(companyId, auditDate);
+                                dal.UpdateMisingAuditMailSentStatus(companyId, locationId, auditDate);
                             }
                             else
                             {

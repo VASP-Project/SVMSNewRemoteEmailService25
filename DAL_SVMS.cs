@@ -469,7 +469,7 @@ namespace Email_Send_WinService
             finally { cn.Close(); }
         }
 
-        public bool UpdateMisingAuditMailSentStatus(int companyId, DateTime auditDate)
+        public bool UpdateMisingAuditMailSentStatus(int companyId, int locationId, DateTime auditDate)
         {
             try
             {
@@ -478,6 +478,7 @@ namespace Email_Send_WinService
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Flag", "UC");
                     cmd.Parameters.AddWithValue("@CompanyId", companyId);
+                    cmd.Parameters.AddWithValue("@LocationId", locationId);
                     cmd.Parameters.AddWithValue("@AuditDate", auditDate);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
