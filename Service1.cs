@@ -610,19 +610,28 @@ namespace Email_Send_WinService
                         //    rowsBuilder.Append("</tr>");
                         //}
 
-                        StringBuilder companyBuilder = new StringBuilder();
-                        StringBuilder locationBuilder = new StringBuilder();
+                        StringBuilder companyListBuilder = new StringBuilder();
+                       // StringBuilder locationBuilder = new StringBuilder();
 
                         foreach (DataRow item in dt.Rows)
                         {
-                            companyBuilder.Append($"<li>{item["CompanyName"]}</li>");
-                            locationBuilder.Append($"<li>{item["LocationName"]}</li>");
+                            //companyBuilder.Append($"<li>{item["CompanyName"]}</li>");
+                            //locationBuilder.Append($"<li>{item["LocationName"]}</li>");
+                            string company = item["CompanyName"] != DBNull.Value ? item["CompanyName"].ToString() : "N/A";
+                            string location = item["LocationName"] != DBNull.Value ? item["LocationName"].ToString() : "N/A";
+                            string missingCount = item["MissingCount"] != DBNull.Value ? item["MissingCount"].ToString() : "0";
+
+                            companyListBuilder.Append("<tr>");
+                            companyListBuilder.Append($"<td>{company}</td>");
+                            companyListBuilder.Append($"<td>{location}</td>");
+                            companyListBuilder.Append($"<td style='text-align:center;'>{missingCount}</td>");
+                            companyListBuilder.Append("</tr>");
                         }
                         // Insert company rows into table
+                        htmlBody = htmlBody.Replace("#CompanyList", companyListBuilder.ToString());
                         htmlBody = htmlBody.Replace("#Auditdate", auditDateStr);
-                        htmlBody = htmlBody.Replace("#CompanyName", $"<ul>{companyBuilder}</ul>");
-                        htmlBody = htmlBody.Replace("#Location", $"<ul>{locationBuilder}</ul>");
                         htmlBody = htmlBody.Replace("hrefCode", callbackUrl);
+                       // htmlBody = htmlBody.Replace("hrefCode", callbackUrl);
 
 
                         // Send email once
