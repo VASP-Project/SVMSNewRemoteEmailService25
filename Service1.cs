@@ -548,7 +548,7 @@ namespace Email_Send_WinService
             try
             {
                 DateTime now = DateTime.Now;
-                if (now.Hour < 3 || (now.Hour == 3 && now.Minute < 10))
+                if (now.Hour < 4 || (now.Hour == 4 && now.Minute < 10))
                 {
                     LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 3:10 AM.");
                     return;
@@ -598,22 +598,32 @@ namespace Email_Send_WinService
                         var auditDateStr = targetDate.ToString("MM/dd/yyyy");
                         // Generate HTML rows for each company
                         StringBuilder rowsBuilder = new StringBuilder();
+                        //foreach (DataRow item in dt.Rows)
+                        //{
+                        //    rowsBuilder.Append("<tr>");
+                        //    rowsBuilder.Append($"<td>{item["CompanyName"]}</td>");
+                        //    //auditDateStr = item["AuditDate"] != DBNull.Value
+                        //    //                 ? Convert.ToDateTime(item["AuditDate"]).ToString("MM/dd/yyyy")
+                        //    //                 : "N/A";
+                        //    //rowsBuilder.Append($"<td>{auditDateStr}</td>");
+
+                        //    rowsBuilder.Append("</tr>");
+                        //}
+
+                        StringBuilder companyBuilder = new StringBuilder();
+                        StringBuilder locationBuilder = new StringBuilder();
+
                         foreach (DataRow item in dt.Rows)
                         {
-                            rowsBuilder.Append("<tr>");
-                            rowsBuilder.Append($"<td>{item["CompanyName"]}</td>");
-                            //auditDateStr = item["AuditDate"] != DBNull.Value
-                            //                 ? Convert.ToDateTime(item["AuditDate"]).ToString("MM/dd/yyyy")
-                            //                 : "N/A";
-                            //rowsBuilder.Append($"<td>{auditDateStr}</td>");
-
-                            rowsBuilder.Append("</tr>");
+                            companyBuilder.Append($"<li>{item["CompanyName"]}</li>");
+                            locationBuilder.Append($"<li>{item["LocationName"]}</li>");
                         }
-
                         // Insert company rows into table
                         htmlBody = htmlBody.Replace("#Auditdate", auditDateStr);
-                        htmlBody = htmlBody.Replace("#CompanyName", rowsBuilder.ToString());
+                        htmlBody = htmlBody.Replace("#CompanyName", $"<ul>{companyBuilder}</ul>");
+                        htmlBody = htmlBody.Replace("#Location", $"<ul>{locationBuilder}</ul>");
                         htmlBody = htmlBody.Replace("hrefCode", callbackUrl);
+
 
                         // Send email once
                         DAL dal_email = new DAL();
