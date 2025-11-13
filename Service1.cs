@@ -548,9 +548,9 @@ namespace Email_Send_WinService
             try
             {
                 DateTime now = DateTime.Now;
-                if (now.Hour < 5 || (now.Hour == 5 && now.Minute < 10))
+                if (now.Hour < 2 || (now.Hour == 2 && now.Minute < 5))
                 {
-                    LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 3:10 AM.");
+                    LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 2:05 AM.");
                     return;
                 }
 
