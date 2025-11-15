@@ -455,10 +455,10 @@ namespace Email_Send_WinService
                 da.SelectCommand.CommandType = CommandType.StoredProcedure;
                 da.SelectCommand.Parameters.Add("@Flag", SqlDbType.NVarChar).Value = flag;
                 da.SelectCommand.Parameters.Add("@CompanyId", SqlDbType.Int).Value = 0;
-                DateTime now = DateTime.Now;
-                DateTime targetDate = now.Date.AddDays(-1);
+                //DateTime now = DateTime.Now;
+                //DateTime targetDate = now.Date.AddDays(-1);
 
-                da.SelectCommand.Parameters.Add("@AuditDate", SqlDbType.DateTime).Value = targetDate;
+                //da.SelectCommand.Parameters.Add("@AuditDate", SqlDbType.DateTime).Value = targetDate;
 
               //  da.SelectCommand.Parameters.Add("@AuditDate", SqlDbType.DateTime).Value = System.DateTime.Now;
                 da.Fill(dt);

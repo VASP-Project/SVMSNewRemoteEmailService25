@@ -547,11 +547,21 @@ namespace Email_Send_WinService
         {
             try
             {
+                //DateTime now = DateTime.Now;
+                //if (now.Hour < 2 || (now.Hour == 2 && now.Minute < 5))
+                //{
+                //    LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 2:5 AM.");
+                //    return;
+                //}
                 DateTime now = DateTime.Now;
-                if (now.Hour < 2 || (now.Hour == 2 && now.Minute < 5))
+
+                // Only allow sending between 02:05 AM and 11:59 PM.
+                bool isBeforeGracePeriod = now.Hour < 2 || (now.Hour == 2 && now.Minute < 5);
+                LogService.WriteErrorLog("{ now: yyyy - MM - dd HH: mm: ss}");
+                if (isBeforeGracePeriod)
                 {
-                    LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 2:5 AM.");
-                    return;
+                    LogService.WriteErrorLog($"Skipped sending missing audit mail at {now:yyyy-MM-dd HH:mm:ss}. Waiting until after 2:05 AM.");
+                    return; // ❗ Correct: return means DO NOT SEND
                 }
 
                 // Target previous day’s audit
