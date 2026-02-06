@@ -74,6 +74,8 @@ namespace Email_Send_WinService
             SendRemindeNovMail();
             //send email for missed audit on yesterday..(once in a day)
             TrySendMissingAuditNoticemail();
+            // OverDue Reminder Mail (Re-Reminder of overdue)
+            SendOverDueRemindeNovMail();
         }
 
         private void Send_Email()
@@ -520,7 +522,96 @@ namespace Email_Send_WinService
 
         }
 
-        
+
+        public void SendOverDueRemindeNovMail()
+        {
+            try
+            {
+                //LogService.WriteErrorLog("SendReminderMail");
+                DAL_SVMS dal = new DAL_SVMS();
+                DataTable dt = dal.GetOverDueReminderNovData("RD");
+                if (dt != null)
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        
+                        string CC = "";
+                        string BCC = "";
+
+
+                        List<ReminderNovData> listName = dt.AsEnumerable().Select(m => new ReminderNovData()
+                        {
+                            CitationId = m.Field<int>("CitationId"),
+                            AuthSignerFirstName = m.Field<string>("AuthSignerFirstName"),
+                            AuthSignerLastName = m.Field<string>("AuthSignerLastName"),
+                           
+                            CompanyName = m.Field<string>("CompanyName"),
+                            ViolatorFirstName = m.Field<string>("ViolatorFirstName"),
+                            ViolatorLastName = m.Field<string>("ViolatorLastName"),
+                            Email = m.Field<string>("Email"),
+                            CompanyId = m.Field<int>("CompanyId"),
+                            NovNo = m.Field<int>("NovNo"),
+                            RemedialTrainingAssignedDate = m.Field<DateTime>("RemedialTrainingAssignedDate")
+                        }).ToList();
+
+                        List<int> compIds = listName.Select(x => x.CompanyId).Distinct().ToList();
+
+                        foreach (int compId in compIds)
+                        {
+                            List<ReminderNovData> companyWiseData = listName.Where(x => x.CompanyId == compId).Distinct().ToList();
+                            List<string> authsignerformaillst = companyWiseData.Select(x => x.Email).Distinct().ToList();
+                            string authSignerEmail = string.Join(",", authsignerformaillst.ToArray());
+                            var distinctData = companyWiseData.Select(x => new { x.CitationId, x.NovNo, x.ViolatorFirstName, x.ViolatorLastName, x.RemedialTrainingAssignedDate }).Distinct().ToList();
+                            LogService.WriteErrorLog("Email sending to authsigners " + authSignerEmail);
+                            foreach (var item in distinctData)
+                            {
+                                string subject = "Citation OverDue Reminder";
+                                string htmlBody = string.Empty;
+                                string AssemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString();
+                                using (StreamReader sr = new StreamReader(AssemblyPath + "/EmailTemplate/ReminderCitationMail.html"))
+                                {
+                                    htmlBody = sr.ReadToEnd();
+                                }
+                                string callbackUrl = ConfigurationManager.AppSettings["SVMSGUILink"];
+                                // DateTime NotificationDate = Convert.ToDateTime(dt.Rows[i]["NotificationDate"]).AddDays(PickUpDays);
+                                DateTime RemedialTrainingAssignedDate = Convert.ToDateTime(item.RemedialTrainingAssignedDate);
+
+                                htmlBody = htmlBody.Replace("#RemedialTrainingAssignedDate", RemedialTrainingAssignedDate.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture));
+                                htmlBody = htmlBody.Replace("#ViolatorFirstName", item.ViolatorFirstName.ToString());
+                                htmlBody = htmlBody.Replace("#ViolatorLastName", item.ViolatorLastName.ToString());
+                                htmlBody = htmlBody.Replace("#NovNo", item.NovNo.ToString());
+                                htmlBody = htmlBody.Replace("hrefCode", callbackUrl);
+
+
+                                DAL dal_email = new DAL();
+                                if (!string.IsNullOrEmpty(authSignerEmail))
+                                {
+                                    dal_email.SendEmailUsingService("ReminderOverdueCitation", authSignerEmail, CC, BCC, subject, htmlBody, "");
+
+                                }
+                                //  SendMail_SVMSReminder(dt.Rows[i]["Email"].ToString(), "", "", subject, htmlBody, Convert.ToInt32(dt.Rows[i]["Id"]));
+                                LogService.WriteErrorLog("Email send to authsigners " + authSignerEmail);
+
+                                dal = new DAL_SVMS();
+                                dal.UpdateOverDueNovMailSentStatus(Convert.ToInt32(item.CitationId));
+                            }
+                        }
+
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(DateTime.Now + string.Format(" : Error Found in the SendRemindeNovMail(). Exception - {0} ", ex.Message));
+
+            }
+
+
+
+        }
+
         public void TrySendMissingAuditNoticemail()
         {
             try

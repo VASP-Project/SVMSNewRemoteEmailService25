@@ -13,6 +13,7 @@ namespace Email_Send_WinService
     public class DAL_SVMS
     {
 
+        //string Dkey = "($h@r!(u!8*MW4oB1VmL5GIwBIjqFYQntHT0CMi2uEYAmBkwxpvsbLQ6KX1SCno9XQ==";
         string Dkey = "($h@r!(u!8*MW4oB1VmL5GIwBIjqFYQntHT0CMi2uEYAmBkwxpvsbLQ6KX1SCno9XQ==";
         string SqlconString;
         SqlConnection cn;
@@ -444,6 +445,53 @@ namespace Email_Send_WinService
             finally { cn.Close(); }
         }
 
+        public DataTable GetOverDueReminderNovData(string flag)
+        {
+            //LogService.WriteErrorLog("GetReminderClearanceData in DLL");
+            DataTable dt = new DataTable();
+            try
+            {
+
+                SqlDataAdapter da = new SqlDataAdapter("OverdueReminderNov", cn);
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@Flag", SqlDbType.NVarChar).Value = flag;
+                da.SelectCommand.Parameters.Add("@Id", SqlDbType.Int).Value = 0;
+                da.SelectCommand.Parameters.Add("@CurrentDate", SqlDbType.DateTime).Value = System.DateTime.Now;
+                da.Fill(dt);
+                cn.Close();
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                cn.Close();
+                throw;
+
+            }
+            finally { cn.Close(); }
+        }
+
+        public bool UpdateOverDueNovMailSentStatus(int id)
+        {
+            try
+            {
+                //LogService.WriteErrorLog("UpdateMailSentStatus in DLL");
+                cmd = new SqlCommand("OverdueReminderNov", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Flag", "UC");
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@CurrentDate", System.DateTime.Now);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                cn.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                cn.Close();
+                throw;
+            }
+            finally { cn.Close(); }
+        }
         public DataTable GetCompaniesWithMissedAuditsData(string flag)
         {
             
