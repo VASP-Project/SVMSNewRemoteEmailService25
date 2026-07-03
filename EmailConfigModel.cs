@@ -10,6 +10,7 @@ namespace Email_Send_WinService
     {
         public string ApplicationName { get; set; }
         public string FromMail { get; set; }
+        public string FromDisplayName { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string SMTPHost { get; set; }

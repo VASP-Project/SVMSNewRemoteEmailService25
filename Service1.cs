@@ -100,12 +100,13 @@ namespace Email_Send_WinService
                             using (MailMessage mail = new MailMessage())
                             {
                                 string DecryptedFromEmail = EncryptDecryptPassword.DecryptText(config.FromMail, Dkey);
+                                string DecryptedFromDisplayName = EncryptDecryptPassword.DecryptText(config.FromDisplayName, Dkey);
                                 string DecryptedEmail = EncryptDecryptPassword.DecryptText(config.Username, Dkey);
                                 string DecryptedPassword = EncryptDecryptPassword.DecryptText(config.Password, Dkey);
                                 string DecryptedHost = EncryptDecryptPassword.DecryptText(config.SMTPHost, Dkey);
                                 string DecryptedPort = EncryptDecryptPassword.DecryptText(config.Port, Dkey);
 
-                                mail.From = new MailAddress(DecryptedFromEmail);
+                                mail.From = new MailAddress(DecryptedFromEmail, DecryptedFromDisplayName);
                                 mail.To.Add(data.ToMail);
                                 if (!string.IsNullOrEmpty(data.CCMail))
                                     mail.CC.Add(data.CCMail);
@@ -419,7 +420,7 @@ namespace Email_Send_WinService
         {
             try
             {
-                //LogService.WriteErrorLog("SendReminderMail");
+                LogService.WriteErrorLog("SendReminderMail");
                 DAL_SVMS dal = new DAL_SVMS();
                 DataTable dt = dal.GetReminderNovData("RD");
                 if (dt != null)
@@ -465,7 +466,7 @@ namespace Email_Send_WinService
                         }).ToList();
 
                         List<int> compIds = listName.Select(x => x.CompanyId).Distinct().ToList();
-
+                        LogService.WriteErrorLog("Email for companies." + compIds);
                         foreach (int compId in compIds)
                         {
                             List<ReminderNovData> companyWiseData = listName.Where(x => x.CompanyId == compId).Distinct().ToList();
@@ -527,7 +528,7 @@ namespace Email_Send_WinService
         {
             try
             {
-                //LogService.WriteErrorLog("SendReminderMail");
+                LogService.WriteErrorLog("SendOverdueReminderMail");
                 DAL_SVMS dal = new DAL_SVMS();
                 DataTable dt = dal.GetOverDueReminderNovData("RD");
                 if (dt != null)
@@ -625,7 +626,7 @@ namespace Email_Send_WinService
                 }
                 else
                 {
-                    LogService.WriteErrorLog("ProhibitedMissingAudit email already sent today. Skipping.");
+                    //LogService.WriteErrorLog("ProhibitedMissingAudit email already sent today. Skipping.");
                 }
             }
             catch (Exception ex)
