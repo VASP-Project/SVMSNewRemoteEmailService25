@@ -651,6 +651,29 @@ namespace Email_Send_WinService
 
 
                 DAL_SVMS dal = new DAL_SVMS();
+                // Recover completed-but-unsubmitted audits
+                DataTable autoSubmitted = dal.AutoSubmitPendingLastAudits();
+
+                if (autoSubmitted != null && autoSubmitted.Rows.Count > 0)
+                {
+                    foreach (DataRow row in autoSubmitted.Rows)
+                    {
+                        LogService.WriteErrorLog(
+                            $"AUTO SUBMIT SUCCESS | " +
+                            $"CompanyId={row["CompanyId"]}, " +
+                            $"LocationId={row["LocationId"]}, " +
+                            $"CompanySummaryId={row["CompanySummaryId"]}, " +
+                            $"DailyAuditSummaryId={row["DailyAuditSummaryId"]}, " +
+                            $"AuditNo={row["AuditNo"]}, " +
+                            $"Time={DateTime.Now:yyyy-MM-dd HH:mm:ss}"
+                        );
+                    }
+                }
+                else
+                {
+                    LogService.WriteErrorLog("AUTO SUBMIT: No eligible pending audits found.");
+                }
+
                 DataTable dt = dal.GetCompaniesWithMissedAuditsData("MA");
 
                 if (dt != null && dt.Rows.Count > 0)

@@ -570,6 +570,35 @@ namespace Email_Send_WinService
             }
         }
 
+        public DataTable AutoSubmitPendingLastAudits()
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("AutoSubmitPendingLastPIAudits", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+
+                        cn.Open();
+                        da.Fill(dt);
+
+                        return dt;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog("Error in AutoSubmitPendingLastAudits: " + ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (cn.State == ConnectionState.Open)
+                    cn.Close();
+            }
+        }
     }
 }
