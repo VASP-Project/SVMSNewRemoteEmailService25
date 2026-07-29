@@ -16,5 +16,6 @@ namespace Email_Send_WinService
         public string SMTPHost { get; set; }
         public int SMTPPort { get; set; }
         public string Port { get; set; }
+        public string SMTPSSL { get; set; }
     }
 }

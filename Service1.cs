@@ -105,6 +105,7 @@ namespace Email_Send_WinService
                                 string DecryptedPassword = EncryptDecryptPassword.DecryptText(config.Password, Dkey);
                                 string DecryptedHost = EncryptDecryptPassword.DecryptText(config.SMTPHost, Dkey);
                                 string DecryptedPort = EncryptDecryptPassword.DecryptText(config.Port, Dkey);
+                                string DecryptedSSL = EncryptDecryptPassword.DecryptText(config.SMTPSSL, Dkey);
 
                                 mail.From = new MailAddress(DecryptedFromEmail, DecryptedFromDisplayName);
                                 mail.To.Add(data.ToMail);
@@ -125,7 +126,7 @@ namespace Email_Send_WinService
                                 using (SmtpClient smtp = new SmtpClient(DecryptedHost, Convert.ToInt32(DecryptedPort)))
                                 {
                                     smtp.Credentials = new NetworkCredential(DecryptedEmail, DecryptedPassword);
-                                    smtp.EnableSsl = true;                                    
+                                    smtp.EnableSsl = bool.Parse(DecryptedSSL);                                    
                                     smtp.Send(mail);
                                 }
                             }
