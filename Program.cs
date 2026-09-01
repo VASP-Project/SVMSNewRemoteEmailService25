@@ -30,6 +30,7 @@ namespace Email_Send_WinService
             //service.SendReminderMail();
             //service.SendRemindeAuditMail();
             //service.SendOverDueRemindeNovMail();
+            //service.TrySendProhibitedAuditNotifications();
             //System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 
 

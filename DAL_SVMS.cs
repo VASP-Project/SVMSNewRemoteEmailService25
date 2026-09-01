@@ -605,5 +605,102 @@ namespace Email_Send_WinService
                     cn.Close();
             }
         }
+
+        public DataTable GetPendingAuditNotifications()
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                
+                    using (SqlCommand cmd = new SqlCommand(
+                        "GetPendingAuditNotifications", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            cn.Open();
+                            da.Fill(dt);
+
+                        return dt;
+                        }
+                    }
+                
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    "Error in DAL_SVMS.GetPendingAuditNotifications(): "
+                    + ex.Message);
+
+                throw;
+            }
+            finally
+            {
+                if (cn.State == ConnectionState.Open)
+                    cn.Close();
+            }           
+        }
+
+        public bool InsertProhibitedAuditNotificationLog(
+    int companyId,
+    string companyName,
+    int locationId,
+    string locationName,
+    int auditNo,
+    string notificationType,
+    DateTime notificationDate,
+    string sentToEmail)
+        {
+            try
+            {
+                
+                    using (SqlCommand cmd = new SqlCommand(
+                        "InsertProhibitedAuditNotificationLog", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@CompanyId", companyId);
+                        cmd.Parameters.AddWithValue("@CompanyName",
+                            (object)companyName ?? DBNull.Value);
+
+                        cmd.Parameters.AddWithValue("@LocationId", locationId);
+                        cmd.Parameters.AddWithValue("@LocationName",
+                            (object)locationName ?? DBNull.Value);
+
+                        cmd.Parameters.AddWithValue("@AuditNo", auditNo);
+
+                        cmd.Parameters.AddWithValue("@NotificationType",
+                            notificationType);
+
+                        cmd.Parameters.AddWithValue("@NotificationDate",
+                            notificationDate);
+
+                        cmd.Parameters.AddWithValue("@SentToEmail",
+                            (object)sentToEmail ?? DBNull.Value);
+
+                        cmd.Parameters.AddWithValue("@SentOn", DateTime.Now);
+
+                        cn.Open();
+
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+               
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    "Error in InsertProhibitedAuditNotificationLog(): "
+                    + ex.Message);
+
+                return false;
+            }
+            finally
+            {
+                if (cn.State == ConnectionState.Open)
+                    cn.Close();
+            }
+        }
     }
 }
