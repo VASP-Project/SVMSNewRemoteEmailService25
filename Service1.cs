@@ -793,6 +793,272 @@ namespace Email_Send_WinService
             }
         }
 
+        //public void TrySendProhibitedAuditNotifications()
+        //{
+        //    try
+        //    {
+        //        DAL_SVMS dal = new DAL_SVMS();
+
+        //        DataTable dt = dal.GetPendingAuditNotifications();
+
+        //        if (dt == null || dt.Rows.Count == 0)
+        //        {
+        //            LogService.WriteErrorLog(
+        //                "No pending prohibited audit notifications found.");
+
+        //            return;
+        //        }
+
+        //        LogService.WriteErrorLog(
+        //            $"Pending prohibited audit notifications found: {dt.Rows.Count}");
+
+        //        foreach (DataRow row in dt.Rows)
+        //        {
+        //            try
+        //            {
+        //                SendProhibitedAuditNotificationEmail(row, dal);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                LogService.WriteErrorLog(
+        //                    "Error processing prohibited audit notification: "
+        //                    + ex.Message);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogService.WriteErrorLog(
+        //            "Error in TrySendProhibitedAuditNotifications(): "
+        //            + ex.Message);
+        //    }
+        //}
+
+
+        //public void SendProhibitedAuditNotificationEmail(
+        //    DataRow row,
+        //    DAL_SVMS dal)
+        //{
+        //    try
+        //    {
+        //        string email =
+        //            row["Email"] != DBNull.Value
+        //                ? row["Email"].ToString()
+        //                : "";
+
+        //        if (string.IsNullOrWhiteSpace(email))
+        //        {
+        //            LogService.WriteErrorLog(
+        //                "AuthSigner email is empty for prohibited audit notification.");
+
+        //            return;
+        //        }
+
+
+        //        //--------------------------------------------------------
+        //        // Company
+        //        //--------------------------------------------------------
+        //        string company =
+        //            row["CompanyName"] != DBNull.Value
+        //                ? row["CompanyName"].ToString()
+        //                : "N/A";
+
+
+        //        //--------------------------------------------------------
+        //        // Location
+        //        //--------------------------------------------------------
+        //        string location =
+        //            row["LocationName"] != DBNull.Value
+        //                ? row["LocationName"].ToString()
+        //                : "N/A";
+
+
+        //        //--------------------------------------------------------
+        //        // Audit number
+        //        //--------------------------------------------------------
+        //        int auditNo =
+        //            row["AuditNo"] != DBNull.Value
+        //                ? Convert.ToInt32(row["AuditNo"])
+        //                : 0;
+
+
+        //        //--------------------------------------------------------
+        //        // IsStarted
+        //        //
+        //        // 0 = Audit has not been started
+        //        // 1 = Audit has been started but not submitted
+        //        //--------------------------------------------------------
+        //        bool isStarted =
+        //            row["IsStarted"] != DBNull.Value &&
+        //            Convert.ToBoolean(row["IsStarted"]);
+
+
+        //        //--------------------------------------------------------
+        //        // Audit cycle date
+        //        //--------------------------------------------------------
+        //        DateTime notificationDate =
+        //            row["NotificationDate"] != DBNull.Value
+        //                ? Convert.ToDateTime(row["NotificationDate"])
+        //                : DateTime.Now;
+
+
+        //        //--------------------------------------------------------
+        //        // Assembly path
+        //        //--------------------------------------------------------
+        //        string assemblyPath =
+        //            Path.GetDirectoryName(
+        //                System.Reflection.Assembly
+        //                    .GetExecutingAssembly()
+        //                    .Location);
+
+
+        //        //--------------------------------------------------------
+        //        // Select email template
+        //        //--------------------------------------------------------
+        //        string templateFileName;
+
+        //        if (!isStarted)
+        //        {
+        //            templateFileName =
+        //                "ProhibitedAuditNotStarted.html";
+        //        }
+        //        else
+        //        {
+        //            templateFileName =
+        //                "ProhibitedAuditOverdue.html";
+        //        }
+
+
+        //        //--------------------------------------------------------
+        //        // Template path
+        //        //--------------------------------------------------------
+        //        string templatePath =
+        //            Path.Combine(
+        //                assemblyPath,
+        //                "EmailTemplate",
+        //                templateFileName);
+
+
+        //        //--------------------------------------------------------
+        //        // Read template
+        //        //--------------------------------------------------------
+        //        string htmlBody;
+
+        //        using (StreamReader sr = new StreamReader(templatePath))
+        //        {
+        //            htmlBody = sr.ReadToEnd();
+        //        }
+
+
+        //        //--------------------------------------------------------
+        //        // Callback URL
+        //        //--------------------------------------------------------
+        //        string callbackUrl =
+        //            ConfigurationManager.AppSettings["SVMSGUILink"];
+
+
+        //        //--------------------------------------------------------
+        //        // Replace common values
+        //        //--------------------------------------------------------
+        //        htmlBody = htmlBody.Replace(
+        //            "#CompanyName",
+        //            company);
+
+        //        htmlBody = htmlBody.Replace(
+        //            "#LocationName",
+        //            location);
+
+        //        htmlBody = htmlBody.Replace(
+        //            "#AuditDate",
+        //            notificationDate.ToString("MM/dd/yyyy"));
+
+        //        htmlBody = htmlBody.Replace(
+        //            "hrefCode",
+        //            callbackUrl);
+
+
+        //        //--------------------------------------------------------
+        //        // Audit number
+        //        //--------------------------------------------------------
+        //        htmlBody = htmlBody.Replace(
+        //            "#AuditNo",
+        //            auditNo.ToString());
+
+
+        //        //--------------------------------------------------------
+        //        // Subject and email service template name
+        //        //--------------------------------------------------------
+        //        string subject;
+        //        string emailTemplateName;
+
+        //        if (!isStarted)
+        //        {
+        //            subject =
+        //                "Prohibited Audit - Start Your Audit for Today";
+
+        //            emailTemplateName =
+        //                "ProhibitedAuditNotStarted";
+        //        }
+        //        else
+        //        {
+        //            subject =
+        //                $"Prohibited Audit - Audit {auditNo} Overdue";
+
+        //            emailTemplateName =
+        //                "ProhibitedAuditOverdue";
+        //        }
+
+
+        //        //--------------------------------------------------------
+        //        // Send email
+        //        //--------------------------------------------------------
+        //        string CC = "";
+        //        string BCC = "";
+
+        //        DAL dalEmail = new DAL();
+
+        //        dalEmail.SendEmailUsingService(
+        //            emailTemplateName,
+        //            email,
+        //            CC,
+        //            BCC,
+        //            subject,
+        //            htmlBody,
+        //            "");
+
+
+        //        //--------------------------------------------------------
+        //        // Email sent successfully
+        //        // Insert notification log only after successful send
+        //        //--------------------------------------------------------
+        //        LogService.WriteErrorLog(
+        //            $"Prohibited Audit notification email sent. " +
+        //            $"Company={company}, " +
+        //            $"Location={location}, " +
+        //            $"AuditNo={auditNo}, " +
+        //            $"IsStarted={isStarted}, " +
+        //            $"Email={email}");
+
+
+        //        dal.InsertProhibitedAuditNotificationLog(
+        //            Convert.ToInt32(row["CompanyId"]),
+        //            company,
+        //            Convert.ToInt32(row["LocationId"]),
+        //            location,
+        //            auditNo,
+        //            "MissedAudit",
+        //            notificationDate,
+        //            email);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogService.WriteErrorLog(
+        //            "Error in SendProhibitedAuditNotificationEmail(): "
+        //            + ex.Message);
+        //    }
+        //}
+
+
         public void TrySendProhibitedAuditNotifications()
         {
             try
@@ -841,6 +1107,9 @@ namespace Email_Send_WinService
         {
             try
             {
+                //--------------------------------------------------------
+                // Email
+                //--------------------------------------------------------
                 string email =
                     row["Email"] != DBNull.Value
                         ? row["Email"].ToString()
@@ -883,18 +1152,19 @@ namespace Email_Send_WinService
 
 
                 //--------------------------------------------------------
-                // IsStarted
+                // Notification Type
                 //
-                // 0 = Audit has not been started
-                // 1 = Audit has been started but not submitted
+                // Reminder = upcoming audit reminder
+                // Overdue  = audit overdue
                 //--------------------------------------------------------
-                bool isStarted =
-                    row["IsStarted"] != DBNull.Value &&
-                    Convert.ToBoolean(row["IsStarted"]);
+                string notificationType =
+                    row["NotificationType"] != DBNull.Value
+                        ? row["NotificationType"].ToString()
+                        : "";
 
 
                 //--------------------------------------------------------
-                // Audit cycle date
+                // Notification date
                 //--------------------------------------------------------
                 DateTime notificationDate =
                     row["NotificationDate"] != DBNull.Value
@@ -913,19 +1183,62 @@ namespace Email_Send_WinService
 
 
                 //--------------------------------------------------------
-                // Select email template
+                // Template / Subject
                 //--------------------------------------------------------
                 string templateFileName;
+                string emailTemplateName;
+                string subject;
 
-                if (!isStarted)
+
+                //--------------------------------------------------------
+                // REMINDER
+                //--------------------------------------------------------
+                if (notificationType.Equals(
+                        "Reminder",
+                        StringComparison.OrdinalIgnoreCase))
                 {
                     templateFileName =
                         "ProhibitedAuditNotStarted.html";
+
+                    emailTemplateName =
+                        "ProhibitedAuditNotStarted";
+
+                    subject =
+                        $"Prohibited Audit - Upcoming Audit {auditNo}";
                 }
-                else
+
+
+                //--------------------------------------------------------
+                // OVERDUE
+                //--------------------------------------------------------
+                else if (notificationType.Equals(
+                             "Overdue",
+                             StringComparison.OrdinalIgnoreCase))
                 {
                     templateFileName =
                         "ProhibitedAuditOverdue.html";
+
+                    emailTemplateName =
+                        "ProhibitedAuditOverdue";
+
+                    subject =
+                        $"Prohibited Audit - Audit {auditNo} Overdue";
+                }
+
+
+                //--------------------------------------------------------
+                // UNKNOWN TYPE
+                //--------------------------------------------------------
+                else
+                {
+                    LogService.WriteErrorLog(
+                        $"Unknown prohibited audit notification type: " +
+                        $"{notificationType}. " +
+                        $"Company={company}, " +
+                        $"Location={location}, " +
+                        $"AuditNo={auditNo}");
+
+                    return;
                 }
 
 
@@ -940,11 +1253,25 @@ namespace Email_Send_WinService
 
 
                 //--------------------------------------------------------
+                // Check template exists
+                //--------------------------------------------------------
+                if (!File.Exists(templatePath))
+                {
+                    LogService.WriteErrorLog(
+                        $"Prohibited audit email template not found: " +
+                        $"{templatePath}");
+
+                    return;
+                }
+
+
+                //--------------------------------------------------------
                 // Read template
                 //--------------------------------------------------------
                 string htmlBody;
 
-                using (StreamReader sr = new StreamReader(templatePath))
+                using (StreamReader sr =
+                       new StreamReader(templatePath))
                 {
                     htmlBody = sr.ReadToEnd();
                 }
@@ -958,7 +1285,7 @@ namespace Email_Send_WinService
 
 
                 //--------------------------------------------------------
-                // Replace common values
+                // Replace template values
                 //--------------------------------------------------------
                 htmlBody = htmlBody.Replace(
                     "#CompanyName",
@@ -973,40 +1300,12 @@ namespace Email_Send_WinService
                     notificationDate.ToString("MM/dd/yyyy"));
 
                 htmlBody = htmlBody.Replace(
-                    "hrefCode",
-                    callbackUrl);
-
-
-                //--------------------------------------------------------
-                // Audit number
-                //--------------------------------------------------------
-                htmlBody = htmlBody.Replace(
                     "#AuditNo",
                     auditNo.ToString());
 
-
-                //--------------------------------------------------------
-                // Subject and email service template name
-                //--------------------------------------------------------
-                string subject;
-                string emailTemplateName;
-
-                if (!isStarted)
-                {
-                    subject =
-                        "Prohibited Audit - Start Your Audit for Today";
-
-                    emailTemplateName =
-                        "ProhibitedAuditNotStarted";
-                }
-                else
-                {
-                    subject =
-                        $"Prohibited Audit - Audit {auditNo} Overdue";
-
-                    emailTemplateName =
-                        "ProhibitedAuditOverdue";
-                }
+                htmlBody = htmlBody.Replace(
+                    "hrefCode",
+                    callbackUrl);
 
 
                 //--------------------------------------------------------
@@ -1028,25 +1327,33 @@ namespace Email_Send_WinService
 
 
                 //--------------------------------------------------------
-                // Email sent successfully
-                // Insert notification log only after successful send
+                // Email successfully sent
                 //--------------------------------------------------------
                 LogService.WriteErrorLog(
                     $"Prohibited Audit notification email sent. " +
+                    $"Type={notificationType}, " +
                     $"Company={company}, " +
                     $"Location={location}, " +
                     $"AuditNo={auditNo}, " +
-                    $"IsStarted={isStarted}, " +
                     $"Email={email}");
 
 
+                //--------------------------------------------------------
+                // Insert notification log
+                //
+                // IMPORTANT:
+                // Store exactly the same type returned by SP.
+                //
+                // Reminder -> Reminder
+                // Overdue  -> Overdue
+                //--------------------------------------------------------
                 dal.InsertProhibitedAuditNotificationLog(
                     Convert.ToInt32(row["CompanyId"]),
                     company,
                     Convert.ToInt32(row["LocationId"]),
                     location,
                     auditNo,
-                    "MissedAudit",
+                    notificationType,
                     notificationDate,
                     email);
             }
@@ -1057,6 +1364,5 @@ namespace Email_Send_WinService
                     + ex.Message);
             }
         }
-
     }
 }
