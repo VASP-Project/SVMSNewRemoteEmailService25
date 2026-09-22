@@ -1171,6 +1171,18 @@ namespace Email_Send_WinService
                         ? Convert.ToDateTime(row["NotificationDate"])
                         : DateTime.Now;
 
+                //--------------------------------------------------------
+                // Audit date
+                //
+                // Business date of the audit cycle.
+                // Audit 3 is checked after midnight but belongs
+                // to the previous audit cycle date.
+                //--------------------------------------------------------
+                DateTime auditDate =
+                    row["AuditDate"] != DBNull.Value
+                        ? Convert.ToDateTime(row["AuditDate"])
+                        : notificationDate;
+
 
                 //--------------------------------------------------------
                 // Assembly path
@@ -1297,7 +1309,7 @@ namespace Email_Send_WinService
 
                 htmlBody = htmlBody.Replace(
                     "#AuditDate",
-                    notificationDate.ToString("MM/dd/yyyy"));
+                    auditDate.ToString("MM/dd/yyyy"));
 
                 htmlBody = htmlBody.Replace(
                     "#AuditNo",
