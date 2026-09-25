@@ -1201,6 +1201,7 @@ namespace Email_Send_WinService
                 string emailTemplateName;
                 string subject;
 
+                
 
                 //--------------------------------------------------------
                 // REMINDER
@@ -1215,8 +1216,8 @@ namespace Email_Send_WinService
                     emailTemplateName =
                         "ProhibitedAuditNotStarted";
 
-                    subject =
-                        $"Prohibited Audit - Upcoming Audit {auditNo}";
+                    //subject =
+                       // $"Prohibited Audit - Upcoming Audit {auditNo}";
                 }
 
 
@@ -1233,8 +1234,8 @@ namespace Email_Send_WinService
                     emailTemplateName =
                         "ProhibitedAuditOverdue";
 
-                    subject =
-                        $"Prohibited Audit - Audit {auditNo} Overdue";
+                   // subject =
+                       // $"Prohibited Audit - Audit {auditNo} Overdue";
                 }
 
 
@@ -1253,6 +1254,30 @@ namespace Email_Send_WinService
                     return;
                 }
 
+
+                DAL dalEmail = new DAL();
+
+                List<EmailConfigModel> emailConfigs =
+                    dalEmail.GetEmailConfigs(string.Empty);
+
+                EmailConfigModel emailConfig =
+                    emailConfigs.FirstOrDefault(
+                        x => x.ApplicationName.Equals(
+                            emailTemplateName,
+                            StringComparison.OrdinalIgnoreCase));
+
+                
+                
+                if (emailConfig == null || string.IsNullOrWhiteSpace(emailConfig.Subject))
+                {
+                    LogService.WriteErrorLog(
+                        $"Email subject configuration not found for {emailTemplateName}");
+                    return;
+                }
+
+                subject = emailConfig.Subject.Replace(
+                    "#",
+                    auditNo.ToString());
 
                 //--------------------------------------------------------
                 // Template path
@@ -1326,8 +1351,9 @@ namespace Email_Send_WinService
                 string CC = "";
                 string BCC = "";
 
-                DAL dalEmail = new DAL();
+                //DAL dalEmail = new DAL();
 
+                
                 dalEmail.SendEmailUsingService(
                     emailTemplateName,
                     email,

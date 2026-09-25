@@ -48,8 +48,10 @@ namespace Email_Send_WinService
                 foreach (PropertyInfo pro in temp.GetProperties())
                 {
                     if (pro.Name == column.ColumnName)
-                        pro.SetValue(obj, dr[column.ColumnName], null);
-                    else
+                        if (dr[column.ColumnName] != DBNull.Value)
+                            pro.SetValue(obj, dr[column.ColumnName], null);
+                        //pro.SetValue(obj, dr[column.ColumnName], null);
+                        else
                         continue;
                 }
             }

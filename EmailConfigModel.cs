@@ -17,5 +17,7 @@ namespace Email_Send_WinService
         public int SMTPPort { get; set; }
         public string Port { get; set; }
         public string SMTPSSL { get; set; }
+
+        public string Subject { get; set; }
     }
 }
