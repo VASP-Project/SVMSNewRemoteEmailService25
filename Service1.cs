@@ -1150,6 +1150,13 @@ namespace Email_Send_WinService
                         ? Convert.ToInt32(row["AuditNo"])
                         : 0;
 
+                //--------------------------------------------------------
+                //Overdue Time 
+                //--------------------------------------------------------
+                TimeSpan overdueTime =
+                            row["OverdueTime"] != DBNull.Value
+                                ? (TimeSpan)row["OverdueTime"]
+                                : TimeSpan.Zero;
 
                 //--------------------------------------------------------
                 // Notification Type
@@ -1275,9 +1282,15 @@ namespace Email_Send_WinService
                     return;
                 }
 
-                subject = emailConfig.Subject.Replace(
-                    "#",
-                    auditNo.ToString());
+                // Subject and Overdue time replace
+                string formattedOverdueTime =
+                    DateTime.Today
+                        .Add(overdueTime)
+                        .ToString(@"HH\:mm");
+
+                                subject = emailConfig.Subject
+                                    .Replace("#", auditNo.ToString())
+                                    .Replace("Time", formattedOverdueTime);
 
                 //--------------------------------------------------------
                 // Template path
