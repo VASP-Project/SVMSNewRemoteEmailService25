@@ -702,5 +702,41 @@ namespace Email_Send_WinService
                     cn.Close();
             }
         }
+
+       
+        public DataTable GetPendingWeeklyAwsBurdenNotifications(    string flag,    int? schedulerInputId = null)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(
+                    "GetPendingWeeklyAwsBurdenNotifications", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@Flag", SqlDbType.NVarChar, 10)
+                        .Value = flag;
+
+                    cmd.Parameters.Add("@SchedulerInputId", SqlDbType.Int)
+                        .Value = schedulerInputId.HasValue
+                            ? (object)schedulerInputId.Value
+                            : DBNull.Value;
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+
+                return dt;
+            }
+            finally
+            {
+                if (cn.State != ConnectionState.Closed)
+                    cn.Close();
+            }
+        }
+
     }
 }

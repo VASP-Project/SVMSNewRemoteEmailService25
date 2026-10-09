@@ -664,28 +664,7 @@ namespace Email_Send_WinService
 
 
                 DAL_SVMS dal = new DAL_SVMS();
-                // Recover completed-but-unsubmitted audits
-                //DataTable autoSubmitted = dal.AutoSubmitPendingLastAudits();
-
-                //if (autoSubmitted != null && autoSubmitted.Rows.Count > 0)
-                //{
-                //    foreach (DataRow row in autoSubmitted.Rows)
-                //    {
-                //        LogService.WriteErrorLog(
-                //            $"AUTO SUBMIT SUCCESS | " +
-                //            $"CompanyId={row["CompanyId"]}, " +
-                //            $"LocationId={row["LocationId"]}, " +
-                //            $"CompanySummaryId={row["CompanySummaryId"]}, " +
-                //            $"DailyAuditSummaryId={row["DailyAuditSummaryId"]}, " +
-                //            $"AuditNo={row["AuditNo"]}, " +
-                //            $"Time={DateTime.Now:yyyy-MM-dd HH:mm:ss}"
-                //        );
-                //    }
-                //}
-                //else
-                //{
-                //    LogService.WriteErrorLog("AUTO SUBMIT: No eligible pending audits found.");
-                //}
+                
 
                 DataTable dt = dal.GetCompaniesWithMissedAuditsData("MA");
 
@@ -726,18 +705,7 @@ namespace Email_Send_WinService
                         var auditDateStr = targetDate.ToString("MM/dd/yyyy");
                         // Generate HTML rows for each company
                         StringBuilder rowsBuilder = new StringBuilder();
-                        //foreach (DataRow item in dt.Rows)
-                        //{
-                        //    rowsBuilder.Append("<tr>");
-                        //    rowsBuilder.Append($"<td>{item["CompanyName"]}</td>");
-                        //    //auditDateStr = item["AuditDate"] != DBNull.Value
-                        //    //                 ? Convert.ToDateTime(item["AuditDate"]).ToString("MM/dd/yyyy")
-                        //    //                 : "N/A";
-                        //    //rowsBuilder.Append($"<td>{auditDateStr}</td>");
-
-                        //    rowsBuilder.Append("</tr>");
-                        //}
-
+                        
                         StringBuilder companyListBuilder = new StringBuilder();
                        // StringBuilder locationBuilder = new StringBuilder();
 
@@ -1400,6 +1368,169 @@ namespace Email_Send_WinService
                 LogService.WriteErrorLog(
                     "Error in SendProhibitedAuditNotificationEmail(): "
                     + ex.Message);
+            }
+        }
+    
+    
+        
+        public void TrySendWeeklyAwsBurdenNotification()
+        {
+            try
+            {
+                DAL_SVMS dal = new DAL_SVMS();
+
+                DataTable dt =
+                    dal.GetPendingWeeklyAwsBurdenNotifications("AWS");
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    LogService.WriteErrorLog(
+                        "No pending weekly AWS burden notifications found.");
+                    return;
+                }
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    try
+                    {
+                        SendWeeklyAwsBurdenNotification(row, dal);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogService.WriteErrorLog(
+                            "Error processing weekly AWS notification for " +
+                            "SchedulerInputId " +
+                            row["SchedulerInputId"] + ": " + ex.Message);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    DateTime.Now +
+                    " : Error in TrySendWeeklyAwsBurdenNotification(): " +
+                    ex.Message);
+            }
+        }
+
+
+        private void SendWeeklyAwsBurdenNotification(
+            DataRow item,
+            DAL_SVMS dal)
+        {
+            int schedulerInputId =
+                Convert.ToInt32(item["SchedulerInputId"]);
+
+            string toEmail =
+                item["RecipientEmails"] != DBNull.Value
+                    ? item["RecipientEmails"].ToString()
+                    : string.Empty;
+
+            if (string.IsNullOrWhiteSpace(toEmail))
+            {
+                LogService.WriteErrorLog(
+                    "No AWS notification recipients found for SchedulerInputId " +
+                    schedulerInputId);
+                return;
+            }
+
+            string subject = "AWS Weekly Inspection Burden Not Met";
+
+            DateTime scheduleStartDate =
+                Convert.ToDateTime(item["ScheduleStartDate"]);
+
+            DateTime scheduleLastDate =
+                Convert.ToDateTime(item["ScheduleLastDate"]);
+
+            string weeklyBurden =
+                Convert.ToDecimal(item["WeeklyBurden"])
+                    .ToString("0.##");
+
+            string totalDuration =
+                item["TotalDuration"] != DBNull.Value
+                    ? item["TotalDuration"].ToString()
+                    : "0:00";
+
+            string callbackUrl =
+                ConfigurationManager.AppSettings["SVMSGUILink"];
+
+            string htmlBody = string.Empty;
+
+            string assemblyPath =
+                Path.GetDirectoryName(
+                    System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+            string templatePath = Path.Combine(
+                assemblyPath,
+                "EmailTemplate",
+                "AwsWeeklyBurden.html");
+
+            using (StreamReader sr = new StreamReader(templatePath))
+            {
+                htmlBody = sr.ReadToEnd();
+            }
+
+            htmlBody = htmlBody.Replace(
+                "#ScheduleStartDate",
+                scheduleStartDate.ToString("MM/dd/yyyy"));
+
+            htmlBody = htmlBody.Replace(
+                "#ScheduleLastDate",
+                scheduleLastDate.ToString("MM/dd/yyyy"));
+
+            htmlBody = htmlBody.Replace(
+                "#WeeklyBurden",
+                weeklyBurden);
+
+            htmlBody = htmlBody.Replace(
+                "#TotalDuration",
+                totalDuration);
+
+            htmlBody = htmlBody.Replace(
+                "hrefCode",
+                callbackUrl ?? string.Empty);
+
+            string CC = string.Empty;
+            string BCC = string.Empty;
+
+            DAL dalEmail = new DAL();
+
+            // This call must report failure by throwing an exception
+            // if the email could not be sent.
+            dalEmail.SendEmailUsingService(
+                "AwsWeeklyBurden",
+                toEmail,
+                CC,
+                BCC,
+                subject,
+                htmlBody,
+                "");
+
+            LogService.WriteErrorLog(
+                "Weekly AWS burden email processed successfully for " +
+                "SchedulerInputId " + schedulerInputId +
+                ". Recipients: " + toEmail);
+
+            // Update the sent flag only after the email call succeeds.
+            DataTable updateResult =
+                dal.GetPendingWeeklyAwsBurdenNotifications(
+                    "UC",
+                    schedulerInputId);
+
+            if (updateResult != null &&
+                updateResult.Rows.Count > 0 &&
+                Convert.ToInt32(updateResult.Rows[0]["RowsUpdated"]) == 1)
+            {
+                LogService.WriteErrorLog(
+                    "Weekly AWS notification status updated for SchedulerInputId " +
+                    schedulerInputId);
+            }
+            else
+            {
+                LogService.WriteErrorLog(
+                    "Email processing completed, but weekly AWS notification " +
+                    "status was not updated for SchedulerInputId " +
+                    schedulerInputId);
             }
         }
     }
