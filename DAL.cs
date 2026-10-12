@@ -154,6 +154,74 @@ namespace Email_Send_WinService
             finally { cn.Close(); }
         }
 
+        public DataTable GetPendingSchedulerInspectionNotifications()
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(
+                    "GetPendingSchedulerInspectionNotifications", cn);
+
+                da.SelectCommand.CommandType =
+                    CommandType.StoredProcedure;
+
+                da.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    "Error found in the GetPendingSchedulerInspectionNotifications exception is "
+                    + ex.Message);
+
+                return dt;
+            }
+            finally
+            {
+                cn.Close();
+            }
+        }
+
+        public bool UpdateAwsSlotOverdueNotificationSent(int inspectionId)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(
+                    "UpdateAwsSlotOverdueNotificationSent", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue(
+                        "@InspectionId",
+                        inspectionId);
+
+                    if (cn.State != ConnectionState.Open)
+                    {
+                        cn.Open();
+                    }
+
+                    cmd.ExecuteNonQuery();
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    "Error in UpdateAwsSlotOverdueNotificationSent: "
+                    + ex);
+
+                return false;
+            }
+            finally
+            {
+                cn.Close();
+            }
+        }
+
+
         public bool SendEmailUsingService(string ApplicationName, string toMail, string ccMail, string bccMail, string subject, string message, string attchementPath)
         {
             try

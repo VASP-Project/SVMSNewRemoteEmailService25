@@ -63,6 +63,8 @@ namespace Email_Send_WinService
             //LogService.WriteErrorLog("timer1_Tick");           
             //LogService.WriteErrorLog("GetBadgeReportSettings completed");
             GetBadgeReportSettings();
+
+           
             Send_Email();
             //Method for security clearance
             SendReminderMail();
@@ -78,6 +80,10 @@ namespace Email_Send_WinService
             SendOverDueRemindeNovMail();
             //
             TrySendProhibitedAuditNotifications();
+
+            TrySendSchedulerInspectionNotifications();
+
+            TrySendWeeklyAwsBurdenNotification();
         }
 
         private void Send_Email()
@@ -1383,9 +1389,289 @@ namespace Email_Send_WinService
                     + ex.Message);
             }
         }
-    
-    
-        
+
+
+        public void TrySendSchedulerInspectionNotifications()
+        {
+            try
+            {
+                DAL dal = new DAL();
+
+                DataTable dt = dal.GetPendingSchedulerInspectionNotifications();
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    return;
+
+                }
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    try
+                    {
+                        SendSchedulerInspectionNotificationEmail(row);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogService.WriteErrorLog(
+                            "Scheduler Inspection Notification Error: "
+                            + ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    "TrySendSchedulerInspectionNotifications Error: "
+                    + ex);
+            }
+        }
+
+
+        public void SendSchedulerInspectionNotificationEmail(DataRow row)
+        {
+            try
+            {
+                //--------------------------------------------------------
+                // Recipient Email
+                //--------------------------------------------------------
+                string email =
+                    row["RecipientEmails"] != DBNull.Value
+                        ? row["RecipientEmails"].ToString()
+                        : "";
+
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    LogService.WriteErrorLog(
+                        "RecipientEmails is empty for Scheduler Inspection notification.");
+
+                    return;
+                }
+
+
+                //--------------------------------------------------------
+                // Inspection Id
+                //--------------------------------------------------------
+                int inspectionId =
+                    row["InspectionId"] != DBNull.Value
+                        ? Convert.ToInt32(row["InspectionId"])
+                        : 0;
+
+
+                //--------------------------------------------------------
+                // Inspection Record No
+                //--------------------------------------------------------
+                string inspectionRecordNo =
+                    row["InspectionRecordNo"] != DBNull.Value
+                        ? row["InspectionRecordNo"].ToString()
+                        : "";
+
+
+                //--------------------------------------------------------
+                // Door
+                //--------------------------------------------------------
+                string doorName =
+                    row["Door"] != DBNull.Value
+                        ? row["Door"].ToString()
+                        : "N/A";
+
+
+                //--------------------------------------------------------
+                // Scheduled Date
+                //--------------------------------------------------------
+                string scheduledDate =
+                    row["ScheduledDate"] != DBNull.Value
+                        ? Convert.ToDateTime(
+                            row["ScheduledDate"])
+                            .ToString("MM/dd/yyyy")
+                        : "";
+
+
+                //--------------------------------------------------------
+                // Scheduled Start Time
+                //--------------------------------------------------------
+                string scheduledStartTime =
+                    row["ScheduledStartTime"] != DBNull.Value
+                        ? row["ScheduledStartTime"].ToString()
+                        : "";
+
+
+                //--------------------------------------------------------
+                // Scheduled End Time
+                //--------------------------------------------------------
+                string scheduledEndTime =
+                    row["ScheduledEndTime"] != DBNull.Value
+                        ? row["ScheduledEndTime"].ToString()
+                        : "";
+
+
+                //--------------------------------------------------------
+                // Email Configuration
+                //--------------------------------------------------------
+                DAL dalEmail = new DAL();
+
+                List<EmailConfigModel> emailConfigs =
+                    dalEmail.GetEmailConfigs(string.Empty);
+
+                string emailTemplateName =
+                    "SchedulerInspectionOverdue";
+
+                EmailConfigModel emailConfig =
+                    emailConfigs.FirstOrDefault(
+                        x => x.ApplicationName.Equals(
+                            emailTemplateName,
+                            StringComparison.OrdinalIgnoreCase));
+
+                if (emailConfig == null ||
+                    string.IsNullOrWhiteSpace(emailConfig.Subject))
+                {
+                    LogService.WriteErrorLog(
+                        "Email subject configuration not found for "
+                        + emailTemplateName);
+
+                    return;
+                }
+
+
+                //--------------------------------------------------------
+                // Subject
+                //--------------------------------------------------------
+                string subject =
+                    emailConfig.Subject;
+
+                //subject = subject.Replace(
+                //    "#InspectionRecordNo",
+                //    inspectionRecordNo);
+
+
+                //--------------------------------------------------------
+                // Template Path - From BIN
+                //--------------------------------------------------------
+                string assemblyPath =
+                    Path.GetDirectoryName(
+                        System.Reflection.Assembly
+                            .GetExecutingAssembly()
+                            .Location);
+
+                string templatePath =
+                    Path.Combine(
+                        assemblyPath,
+                        "EmailTemplate",
+                        "SchedulerInspectionOverdue.html");
+
+
+                //--------------------------------------------------------
+                // Check Template
+                //--------------------------------------------------------
+                if (!File.Exists(templatePath))
+                {
+                    LogService.WriteErrorLog(
+                        "Scheduler Inspection email template not found: "
+                        + templatePath);
+
+                    return;
+                }
+
+
+                //--------------------------------------------------------
+                // Read Template
+                //--------------------------------------------------------
+                string htmlBody;
+
+                using (StreamReader sr =
+                       new StreamReader(templatePath))
+                {
+                    htmlBody = sr.ReadToEnd();
+                }
+
+
+                //--------------------------------------------------------
+                // Login URL
+                //--------------------------------------------------------
+                string callbackUrl =
+                    ConfigurationManager.AppSettings["SVMSGUILink"];
+
+
+                //--------------------------------------------------------
+                // Replace Template Values
+                //--------------------------------------------------------
+                htmlBody = htmlBody.Replace(
+                    "#InspectionId",
+                    inspectionId.ToString());
+
+                htmlBody = htmlBody.Replace(
+                    "#DoorName",
+                    doorName);
+
+                htmlBody = htmlBody.Replace(
+                    "#ScheduleDate",
+                    scheduledDate);
+
+                htmlBody = htmlBody.Replace(
+                    "#ScheduleStartTime",
+                    scheduledStartTime);
+
+                htmlBody = htmlBody.Replace(
+                    "#ScheduleEndTime",
+                    scheduledEndTime);
+
+                htmlBody = htmlBody.Replace(
+                    "hrefCode",
+                    callbackUrl);
+
+
+                //--------------------------------------------------------
+                // CC / BCC
+                //--------------------------------------------------------
+                string CC = "";
+                string BCC = "";
+
+
+                //--------------------------------------------------------
+                // Send Email
+                //--------------------------------------------------------
+                bool result = dalEmail.SendEmailUsingService(
+                        emailTemplateName,
+                        email,
+                        CC,
+                        BCC,
+                        subject,
+                        htmlBody,
+                        "");
+
+                if (result)
+                {
+                    DAL dal = new DAL();
+
+                    dal.UpdateAwsSlotOverdueNotificationSent(
+                        inspectionId);
+
+                    LogService.WriteErrorLog(
+                        "Scheduler Inspection overdue notification queued successfully "
+                        + "and flag updated. InspectionId: "
+                        + inspectionId
+                        + ", InspectionRecordNo: "
+                        + inspectionRecordNo);
+                }
+                else
+                {
+                    LogService.WriteErrorLog(
+                        "Scheduler Inspection overdue notification queue failed. "
+                        + "InspectionId: "
+                        + inspectionId
+                        + ", InspectionRecordNo: "
+                        + inspectionRecordNo);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    "Error in SendSchedulerInspectionNotificationEmail: "
+                    + ex);
+            }
+        }
+
+
         public void TrySendWeeklyAwsBurdenNotification()
         {
             try
@@ -1447,7 +1733,34 @@ namespace Email_Send_WinService
                 return;
             }
 
-            string subject = "AWS Weekly Inspection Burden Not Met";
+            //Subject Configuable
+            DAL dalEmail = new DAL();
+
+            List<EmailConfigModel> emailConfigs =
+                dalEmail.GetEmailConfigs(string.Empty);
+
+            string emailTemplateName = "AwsWeeklyBurden";
+
+            EmailConfigModel emailConfig =
+                emailConfigs.FirstOrDefault(
+                    x => x.ApplicationName.Equals(
+                        emailTemplateName,
+                        StringComparison.OrdinalIgnoreCase));
+
+            if (emailConfig == null ||
+                string.IsNullOrWhiteSpace(emailConfig.Subject))
+            {
+                LogService.WriteErrorLog(
+                    "Email subject configuration not found for " +
+                    emailTemplateName);
+
+                return;
+            }
+
+            //Subject 
+            string subject = emailConfig.Subject;
+
+
 
             DateTime scheduleStartDate =
                 Convert.ToDateTime(item["ScheduleStartDate"]);
@@ -1506,7 +1819,7 @@ namespace Email_Send_WinService
             string CC = string.Empty;
             string BCC = string.Empty;
 
-            DAL dalEmail = new DAL();
+           
 
             // This call must report failure by throwing an exception
             // if the email could not be sent.
