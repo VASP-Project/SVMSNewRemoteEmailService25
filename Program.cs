@@ -30,11 +30,11 @@ namespace Email_Send_WinService
             //service.SendReminderMail();
             //service.SendRemindeAuditMail();
             //service.SendOverDueRemindeNovMail();
-            //service.TrySendProhibitedAuditNotifications();
-            //service.TrySendSchedulerInspectionNotifications();
+            ////service.TrySendProhibitedAuditNotifications();
+            ////service.TrySendSchedulerInspectionNotifications();
             //service.TrySendWeeklyAwsBurdenNotification();
 
-            //System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+            // System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 
 
             //ServiceBase[] ServicesToRun = new ServiceBase[]
