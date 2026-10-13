@@ -1732,7 +1732,14 @@ namespace Email_Send_WinService
                     schedulerInputId);
                 return;
             }
-
+            toEmail = string.Join(
+                ",",
+                toEmail.Split(
+                    new[] { ';', ',' },
+                    StringSplitOptions.RemoveEmptyEntries)
+                .Select(email => email.Trim())
+                .Where(email => !string.IsNullOrWhiteSpace(email))
+            );
             //Subject Configuable
             DAL dalEmail = new DAL();
 
