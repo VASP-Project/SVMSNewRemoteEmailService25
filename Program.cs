@@ -34,7 +34,7 @@ namespace Email_Send_WinService
             ////service.TrySendSchedulerInspectionNotifications();
             //service.TrySendWeeklyAwsBurdenNotification();
 
-            // System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+           // System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 
 
             //ServiceBase[] ServicesToRun = new ServiceBase[]

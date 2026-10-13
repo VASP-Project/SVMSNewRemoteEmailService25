@@ -1597,7 +1597,7 @@ namespace Email_Send_WinService
                 //--------------------------------------------------------
                 htmlBody = htmlBody.Replace(
                     "#InspectionId",
-                    inspectionId.ToString());
+                    inspectionRecordNo.ToString());
 
                 htmlBody = htmlBody.Replace(
                     "#DoorName",
@@ -1776,7 +1776,7 @@ namespace Email_Send_WinService
                 item["TotalDuration"] != DBNull.Value
                     ? item["TotalDuration"].ToString()
                     : "0:00";
-
+            string schedularId = item["SchedulerInputId"] != DBNull.Value ? item["SchedulerInputId"].ToString(): null;
             string callbackUrl =
                 ConfigurationManager.AppSettings["SVMSGUILink"];
 
@@ -1796,6 +1796,7 @@ namespace Email_Send_WinService
                 htmlBody = sr.ReadToEnd();
             }
 
+            htmlBody = htmlBody.Replace("#SchedulerInputId", schedularId);
             htmlBody = htmlBody.Replace(
                 "#ScheduleStartDate",
                 scheduleStartDate.ToString("MM/dd/yyyy"));
