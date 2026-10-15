@@ -312,5 +312,69 @@ namespace Email_Send_WinService
 
 
         }
+
+        public bool InsertAwsMissingInspectionNotificationLog(int schedulerInputId,string schedulerSlotId,DateTime scheduledEndDateTime, DateTime notificationTime)
+        {
+            try
+            {
+                using (SqlConnection connection =
+                    new SqlConnection(SqlconString))
+                {
+                    connection.Open();
+
+                    string query = @"
+                INSERT INTO dbo.AwsMissingInspectionNotificationLog
+                (
+                    SchedulerInputId,
+                    SchedulerSlotId,
+                    ScheduledEndDateTime,
+                    NotificationTime
+                )
+                SELECT
+                    @SchedulerInputId,
+                    @SchedulerSlotId,
+                    @ScheduledEndDateTime,
+                    @NotificationTime
+                WHERE NOT EXISTS
+                (
+                    SELECT 1
+                    FROM dbo.AwsMissingInspectionNotificationLog
+                    WHERE SchedulerInputId = @SchedulerInputId
+                      AND SchedulerSlotId = @SchedulerSlotId
+                );";
+
+                    using (SqlCommand command =
+                        new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(
+                            "@SchedulerInputId", SqlDbType.Int)
+                            .Value = schedulerInputId;
+
+                        command.Parameters.Add(
+                            "@SchedulerSlotId", SqlDbType.VarChar, 100)
+                            .Value = schedulerSlotId;
+
+                        command.Parameters.Add(
+                            "@ScheduledEndDateTime", SqlDbType.DateTime)
+                            .Value = scheduledEndDateTime;
+
+                        command.Parameters.Add(
+                            "@NotificationTime", SqlDbType.DateTime)
+                            .Value = notificationTime;
+
+                        return command.ExecuteNonQuery() == 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    "InsertAwsMissingInspectionNotificationLog Error: "
+                    + ex);
+
+                return false;
+            }
+        }
     }
+
 }

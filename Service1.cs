@@ -1167,6 +1167,10 @@ namespace Email_Send_WinService
         {
             try
             {
+                string notificationType = Convert.ToString(row["NotificationType"]);
+
+                bool isMissingInspection =    string.Equals( notificationType,  "MissingInspection", StringComparison.OrdinalIgnoreCase);
+
                 //--------------------------------------------------------
                 // Recipient Email
                 //--------------------------------------------------------
@@ -1330,9 +1334,30 @@ namespace Email_Send_WinService
                 //--------------------------------------------------------
                 // Replace Template Values
                 //--------------------------------------------------------
+
+                string inspectionIdRow = string.Empty;
+
+                if (row["InspectionId"] != DBNull.Value &&
+                    !string.IsNullOrWhiteSpace(
+                        Convert.ToString(row["InspectionId"])))
+                {
+                    inspectionIdRow = $@"
+                    <tr>
+                        <td style='font-weight:bold;
+                                   width:40%;
+                                   border:1px solid #dddddd;'>
+                            Inspection ID
+                        </td>
+                        <td style='border:1px solid #dddddd;'>
+                            {System.Net.WebUtility.HtmlEncode(
+                                                Convert.ToString(row["InspectionId"]))}
+                        </td>
+                    </tr>";
+                }
+
                 htmlBody = htmlBody.Replace(
-                    "#InspectionId",
-                    inspectionRecordNo.ToString());
+                    "#InspectionIdRow", inspectionIdRow);
+
 
                 htmlBody = htmlBody.Replace(
                     "#DoorName",
@@ -1378,24 +1403,47 @@ namespace Email_Send_WinService
                 {
                     DAL dal = new DAL();
 
-                    dal.UpdateAwsSlotOverdueNotificationSent(
-                        inspectionId);
+                    if (isMissingInspection)
+                    {
+                        bool tracked = dalEmail.InsertAwsMissingInspectionNotificationLog( Convert.ToInt32(row["SchedulerInputId"]),Convert.ToString(row["SchedulerSlotId"]),
+                            Convert.ToDateTime(row["ScheduledEndDateTime"]),
+                            Convert.ToDateTime(row["NotificationTime"])
+                        );
 
-                    LogService.WriteErrorLog(
-                        "Scheduler Inspection overdue notification queued successfully "
-                        + "and flag updated. InspectionId: "
-                        + inspectionId
-                        + ", InspectionRecordNo: "
-                        + inspectionRecordNo);
+                        if (!tracked)
+                        {
+                            LogService.WriteErrorLog(
+                                "AWS missing-inspection notification was queued, " +
+                                "but tracking failed. SchedulerInputId: " +
+                                row["SchedulerInputId"] +
+                                ", SchedulerSlotId: " +
+                                row["SchedulerSlotId"]);
+                        }
+                        else
+                        {
+                            LogService.WriteErrorLog(
+                                "AWS missing-inspection notification queued and tracked. " +
+                                "SchedulerInputId: " + row["SchedulerInputId"] +
+                                ", SchedulerSlotId: " + row["SchedulerSlotId"]);
+                        }
+                    }
+                    else
+                    {
+                        dal.UpdateAwsSlotOverdueNotificationSent(inspectionId);
+
+                        LogService.WriteErrorLog(
+                            "Scheduler Inspection overdue notification queued successfully. " +
+                            "InspectionId: " + inspectionId +
+                            ", InspectionRecordNo: " + inspectionRecordNo);
+                    }
                 }
                 else
                 {
                     LogService.WriteErrorLog(
-                        "Scheduler Inspection overdue notification queue failed. "
-                        + "InspectionId: "
-                        + inspectionId
-                        + ", InspectionRecordNo: "
-                        + inspectionRecordNo);
+                        "Scheduler Inspection overdue notification queue failed. " +
+                        "NotificationType: " + notificationType +
+                        ", SchedulerInputId: " + row["SchedulerInputId"] +
+                        ", SchedulerSlotId: " + row["SchedulerSlotId"]);
                 }
             }
             catch (Exception ex)
