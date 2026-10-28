@@ -738,7 +738,17 @@ namespace Email_Send_WinService
             }
         }
 
-      
-        
+
+        public void UpdateLapsedProhibitedAudits()
+        {
+            
+            using (SqlCommand cmd = new SqlCommand(
+                "dbo.UpdateLapsedProhibitedAudits", cn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

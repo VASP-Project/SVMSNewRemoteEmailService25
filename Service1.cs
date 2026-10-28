@@ -84,6 +84,8 @@ namespace Email_Send_WinService
             TrySendSchedulerInspectionNotifications();
 
             TrySendWeeklyAwsBurdenNotification();
+
+            TryUpdateProhibitedAuditLapse();
         }
 
         private void Send_Email()
@@ -1643,5 +1645,24 @@ namespace Email_Send_WinService
                     schedulerInputId);
             }
         }
+
+
+        public void TryUpdateProhibitedAuditLapse()
+        {
+            try
+            {
+                DAL_SVMS dal = new DAL_SVMS();
+
+                dal.UpdateLapsedProhibitedAudits();
+            }
+            catch (Exception ex)
+            {
+                LogService.WriteErrorLog(
+                    DateTime.Now +
+                    " : Error in TryUpdateProhibitedAuditLapse(): " +
+                    ex.ToString());
+            }
+        }
+
     }
 }
